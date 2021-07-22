@@ -20,3 +20,18 @@ exports.createPet = (req, res) => {
     .then(() => res.send({message: "Pet Created"}))
     .catch(err => res.status(500).send(err))
 }
+
+
+exports.getPets = (req, res) => {
+    const db = connectDb()
+    db.collection('pets').get()
+    .then(petsCollection => {
+      const petsArray = petsCollection.docs.map(doc => {
+          let pet = doc.data()
+          pet.id = doc.id
+          return pet
+      })
+      res.send(petsArray)
+    })
+    .catch(err => res.status(500).send(err))
+  }
